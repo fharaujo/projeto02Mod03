@@ -12,8 +12,11 @@ const ObjectId = mongodb.ObjectId;
   const options = {
     useUnifiedTopology: true,
   };
+  // cria um cliente
   const cliente = await mongodb.MongoClient.connect(connectionString, options);
+  // pegando o banco do cliente
   const db = cliente.db("db_project_blue");
+  // buscando o objeto do banco
   const characters = db.collection("characters");
 
   app.get("/", (req, res) => {
