@@ -15,12 +15,23 @@ const ObjectId = mongodb.ObjectId;
   // cria um cliente
   const cliente = await mongodb.MongoClient.connect(connectionString, options);
   // pegando o banco do cliente
-  const db = cliente.db("db_project_blue");
+  const db = cliente.db('db_project_blue');
   // buscando o objeto do banco
-  const characters = db.collection("characters");
+  const characters = db.collection('characters');
+
+  // pegando personagem é válido e colocando em uma array
+  const getCharacterValid = () => characters.find({}).toArray();
+
+  // buscando personagem pelo id
+  const getCharactesById = () => characters.findOne({_id: ObjectId(id)})
+
 
   app.get("/", (req, res) => {
     res.send({ info: "Olá" });
+  });
+
+  app.get('/characters', async (req, res) => {
+      res.send(await getCharacterValid())
   });
 
   app.listen(port, () => {
