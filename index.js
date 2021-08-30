@@ -11,7 +11,8 @@ const ObjectId = mongodb.ObjectId;
     res.send({ info: "Olá" });
   });
 
+
   app.listen(port, () => {
-    console.log(`Servidor rodando em http://localhost:${port}`);
+    console.log(`Servidor rodando em: http://localhost:${port}`);
   });
 })();
