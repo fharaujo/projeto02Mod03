@@ -50,7 +50,7 @@ require("dotenv").config();
     res.send(await getCharacterValid());
   });
 
-  // GET /Characters respondendo a req com o personagem pelo id
+  // GET /Characters{:id} respondendo a req com o personagem pelo id
   app.get("/characters/:id", async (req, res) => {
     const id = req.params.id;
     res.send(await getCharactersById(id));
@@ -62,14 +62,14 @@ require("dotenv").config();
     res.send(await postCharacters(character));
   });
 
-  // PUT
+  // PUT /characters/{:id} atualizando personagem pelo id
   app.put("/characters/:id", async (req, res) => {
     const id = req.params.id;
     const character = req.body;
     res.send(putCharacters(id, character));
   });
-
-  // DELETE
+ 
+  // DELETE /characters/{:id} deletando personagem pelo id
   app.delete("/characters/:id", async (req, res) => {
     const id = req.params.id;
     res.send(deleteCharacters(id));
