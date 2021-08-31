@@ -30,7 +30,15 @@ require("dotenv").config();
   // buscando personagem pelo id
   const getCharactersById = (id) => characters.findOne({ _id: ObjectId(id) });
 
-  const postCharacters = (character) => characters.insertMany([{ character }]);
+  // inserindo personagem
+  const postCharacters = (character) => characters.insertOne({ character });
+
+  // update personagem
+  const putCharacters = (id, character) =>
+    characters.updateOne({ _id: ObjectId(id) }, { $set: character });
+
+  // delete personagem
+  const deleteCharacters = (id) => characters.deleteOne({ _id: ObjectId(id) });
 
   // GET "/" rota inicial
   app.get("/", (req, res) => {
@@ -52,6 +60,19 @@ require("dotenv").config();
   app.post("/characters", async (req, res) => {
     const character = req.body;
     res.send(await postCharacters(character));
+  });
+
+  // PUT
+  app.put("/characters/:id", async (req, res) => {
+    const id = req.params.id;
+    const character = req.body;
+    res.send(putCharacters(id, character));
+  });
+
+  // DELETE
+  app.delete("/characters/:id", async (req, res) => {
+    const id = req.params.id;
+    res.send(deleteCharacters(id));
   });
 
   app.listen(port, () => {
