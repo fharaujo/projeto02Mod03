@@ -56,7 +56,7 @@ require("dotenv").config();
     res.send(await getCharactersById(id));
   });
 
-  // POST
+  // POST /characters respondendo todos os personagens 
   app.post("/characters", async (req, res) => {
     const character = req.body;
     res.send(await postCharacters(character));
