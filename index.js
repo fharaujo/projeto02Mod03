@@ -6,6 +6,7 @@ require("dotenv").config();
 (async () => {
   const app = express();
   app.use(express.json());
+  // variáveis de ambientes
   const dbHost = process.env.DB_HOST;
   const dbPort = process.env.DB_PORT;
   const dbName = process.env.DB_NAME;
