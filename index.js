@@ -34,18 +34,17 @@ require("dotenv").config();
   // buscando personagem pelo id
   const getCharactersById = (id) => characters.findOne({ _id: ObjectId(id) });
 
-  // inserindo personagem
+  // criando/inserindo personagem
   const postCharacters = (character) => characters.insertOne({ character });
 
   // update personagem
   const putCharacters = (id, character) =>
     characters.updateOne({ _id: ObjectId(id) }, { $set: character });
 
-  // delete personagem
+  // excluindo personagem
   const deleteCharacters = (id) => characters.deleteOne({ _id: ObjectId(id) });
 
   //CORS
-
   app.all("/*", (req, res, next) => {
     res.header("Access-Control-Allow-Origin", "*");
 
