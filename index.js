@@ -77,19 +77,61 @@ require("dotenv").config();
   // POST /characters respondendo todos os personagens
   app.post("/characters", async (req, res) => {
     const character = req.body;
-    res.send(await postCharacters(character));
+
+    if (!character || !character.nome || !character.imagemUrl) {
+      res.status(404).send({ error: "Personagem está falando elementos." });
+      return;
+    }
+
+    const result = await postCharacters(character);
+    if (result == false) {
+    }
   });
 
   // PUT /characters/{:id} atualizando personagem pelo id
   app.put("/characters/:id", async (req, res) => {
     const id = req.params.id;
     const character = req.body;
-    res.send(putCharacters(id, character));
+
+    if (!character || !character.nome || !character.imagemUrl) {
+      res.status(404).send({ error: "Personagem está falando elementos." });
+      return;
+    }
+
+    const quantityCharacters = await characters.countDocuments({
+      _id: ObjectId(id),
+    });
+    if (quantityCharacters !== 1) {
+      res.status(404).send({ erro: "Personagem não encontrado." });
+      return;
+    }
+    const updateCharacter = await putCharacters(id, character);
+    console.log(updateCharacter);
+    if (updateCharacter.modifiedCount !== 1) {
+      res.send({ error: "Erro na atualização." });
+      return;
+    }
+
+    res.send(await getCharactersById(id));
   });
 
   // DELETE /characters/{:id} deletando personagem pelo id
   app.delete("/characters/:id", async (req, res) => {
     const id = req.params.id;
+
+    const quantityCharacters = await characters.countDocuments({
+      _id: ObjectId(id),
+    });
+    if (quantityCharacters !== 1) {
+      res.status(404).send({ erro: "Personagem não encontrado." });
+      return;
+    }
+
+
+    const deleteCharacter = await deleteCharacters(id)
+
+    
+    console.log(deleteCharacter)
     res.send(deleteCharacters(id));
   });
 
