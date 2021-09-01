@@ -10,12 +10,12 @@ require("dotenv").config();
   const dbName = process.env.DB_NAME;
   const dbPassword = process.env.DB_PASSOWRD;
   const dbUser = process.env.DB_USER;
-  const dbUser = process.env.DB_USER;
+  const dbChar = process.env.DB_CHAR;
 
   // porta do servidor
   const port = 3000;
   // string de conexão com MongoDB Atlas (Cloud)
-  const connectionString = `mongodb+srv://${dbUser}:${dbPassword}@cluster0.${dbUser}.mongodb.net/${dbName}?retryWrites=true&w=majority`;
+  const connectionString = `mongodb+srv://${dbUser}:${dbPassword}@cluster0.${dbChar}.mongodb.net/${dbName}?retryWrites=true&w=majority`;
 
   // fazendo a conexão direta com o banco
   const options = {
