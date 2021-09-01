@@ -7,12 +7,13 @@ require("dotenv").config();
   const app = express();
   app.use(express.json());
   // variáveis de ambientes
-  const dbHost = process.env.DB_HOST;
-  const dbPort = process.env.DB_PORT;
   const dbName = process.env.DB_NAME;
+  const db_PASSWORD = process.env.DB_PASSOWRD;
+  const dbUser = process.env.DB_USER;
+  const dbChar = process.env.DB_CHAR
 
   const port = 3000;
-  const connectionString = `mongodb://${dbHost}:${dbPort}/${dbName}`;
+  const connectionString = `mongodb+srv://${dbUser}:${db_PASSWORD}@cluster0.${dbChar}.mongodb.net/${dbName}?retryWrites=true&w=majority`;
 
   // fazendo a conexão direta com o banco
   const options = {
@@ -40,6 +41,24 @@ require("dotenv").config();
 
   // delete personagem
   const deleteCharacters = (id) => characters.deleteOne({ _id: ObjectId(id) });
+
+
+  //CORS
+
+	app.all("/*", (req, res, next) => {
+		res.header("Access-Control-Allow-Origin", "*");
+
+		res.header("Access-Control-Allow-Methods", "*");
+
+		res.header(
+			"Access-Control-Allow-Headers",
+			"Access-Control-Allow-Headers, Origin, Accept, X-Requested-With, Content-Type, Access-Control-Request-Method, Access-Control-Request-Headers, Authorization"
+		);
+
+		next();
+	});
+
+  
 
   // GET "/" rota inicial
   app.get("/", (req, res) => {
