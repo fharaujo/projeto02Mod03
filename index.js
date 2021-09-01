@@ -8,12 +8,14 @@ require("dotenv").config();
   app.use(express.json());
   // variáveis de ambientes
   const dbName = process.env.DB_NAME;
-  const db_PASSWORD = process.env.DB_PASSOWRD;
+  const dbPassword = process.env.DB_PASSOWRD;
   const dbUser = process.env.DB_USER;
-  const dbChar = process.env.DB_CHAR
+  const dbChar = process.env.DB_CHAR;
 
+  // porta do servidor
   const port = 3000;
-  const connectionString = `mongodb+srv://${dbUser}:${db_PASSWORD}@cluster0.${dbChar}.mongodb.net/${dbName}?retryWrites=true&w=majority`;
+  // string de conexão com MongoDB Atlas (Cloud)
+  const connectionString = `mongodb+srv://${dbUser}:${dbPassword}@cluster0.${dbChar}.mongodb.net/${dbName}?retryWrites=true&w=majority`;
 
   // fazendo a conexão direta com o banco
   const options = {
@@ -21,7 +23,7 @@ require("dotenv").config();
   };
   // cria um cliente
   const cliente = await mongodb.MongoClient.connect(connectionString, options);
-  // pegando o banco do cliente
+  // pegando cliente db
   const db = cliente.db("db_project_blue");
   // buscando o objeto especifico do banco
   const characters = db.collection("characters");
@@ -42,23 +44,20 @@ require("dotenv").config();
   // delete personagem
   const deleteCharacters = (id) => characters.deleteOne({ _id: ObjectId(id) });
 
-
   //CORS
 
-	app.all("/*", (req, res, next) => {
-		res.header("Access-Control-Allow-Origin", "*");
+  app.all("/*", (req, res, next) => {
+    res.header("Access-Control-Allow-Origin", "*");
 
-		res.header("Access-Control-Allow-Methods", "*");
+    res.header("Access-Control-Allow-Methods", "*");
 
-		res.header(
-			"Access-Control-Allow-Headers",
-			"Access-Control-Allow-Headers, Origin, Accept, X-Requested-With, Content-Type, Access-Control-Request-Method, Access-Control-Request-Headers, Authorization"
-		);
+    res.header(
+      "Access-Control-Allow-Headers",
+      "Access-Control-Allow-Headers, Origin, Accept, X-Requested-With, Content-Type, Access-Control-Request-Method, Access-Control-Request-Headers, Authorization"
+    );
 
-		next();
-	});
-
-  
+    next();
+  });
 
   // GET "/" rota inicial
   app.get("/", (req, res) => {
@@ -76,7 +75,7 @@ require("dotenv").config();
     res.send(await getCharactersById(id));
   });
 
-  // POST /characters respondendo todos os personagens 
+  // POST /characters respondendo todos os personagens
   app.post("/characters", async (req, res) => {
     const character = req.body;
     res.send(await postCharacters(character));
@@ -88,7 +87,7 @@ require("dotenv").config();
     const character = req.body;
     res.send(putCharacters(id, character));
   });
- 
+
   // DELETE /characters/{:id} deletando personagem pelo id
   app.delete("/characters/:id", async (req, res) => {
     const id = req.params.id;
