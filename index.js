@@ -79,7 +79,7 @@ require("dotenv").config();
     const character = req.body;
 
     if (!character || !character.nome || !character.imagemUrl) {
-      res.status(404).send({ error: "Personagem está falando elementos." });
+      res.status(404).send({ error: "Personagem inválido." });
       return;
     }
 
@@ -130,7 +130,7 @@ require("dotenv").config();
 
     const deleteCharacter = await deleteCharacters(id)
 
-    
+
     console.log(deleteCharacter)
     res.send(deleteCharacters(id));
   });
