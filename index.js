@@ -92,7 +92,7 @@ require("dotenv").config();
     }
 
     const result = await postCharacters(character);
-    
+
     if (result.acknowledged == false) {
       res.status(500).send({ error: "Personagem não existe." });
       return;
@@ -121,10 +121,12 @@ require("dotenv").config();
 
     console.log(updateCharacter);
     if (updateCharacter.acknowledged == "undefined") {
-      res.status(500).send({ error: "Ocorreu um erro ao atualizar o personagem." });
+      res
+        .status(500)
+        .send({ error: "Ocorreu um erro ao atualizar o personagem." });
       return;
     }
-    const newCharacters = await getCharactersById(id)
+    const newCharacters = await getCharactersById(id);
     res.send(newCharacters);
   });
 
@@ -142,8 +144,10 @@ require("dotenv").config();
 
     const deleteCharacter = await deleteCharacters(id);
 
-    if(deleteCharacter.deletedCount !== 1){
-      res.status(500).send({error: "Ocorreu um erro ao deletar o personagem."})
+    if (deleteCharacter.deletedCount !== 1) {
+      res
+        .status(500)
+        .send({ error: "Ocorreu um erro ao deletar o personagem." });
     }
     res.status(204);
   });
