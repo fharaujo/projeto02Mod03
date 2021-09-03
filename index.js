@@ -84,13 +84,21 @@ require("dotenv").config();
     const character = req.body;
 
     if (!character || !character.nome || !character.imagemUrl) {
-      res.status(404).send({ error: "Personagem inválido." });
+      res
+        .status(400)
+        .send({
+          error:
+            "Personagem inválido. Certifique-se que preencheu os campos solicitados.",
+        });
       return;
     }
 
     const result = await postCharacters(character);
-    if (result == false) {
+    if (result.acknowledged == false) {
+      res.status(500).send({ error: "Personagem não existe." });
+      return;
     }
+    res.status(201).send(result);
   });
 
   // PUT /characters/{:id} atualizando personagem pelo id
