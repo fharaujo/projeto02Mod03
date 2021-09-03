@@ -2,6 +2,7 @@ const express = require("express");
 const mongodb = require("mongodb");
 const ObjectId = mongodb.ObjectId;
 require("dotenv").config();
+require("express-async-errors");
 
 (async () => {
   const app = express();
@@ -59,7 +60,7 @@ require("dotenv").config();
   });
 
   // GET "/" rota inicial
-  app.get("/", (req, res) => {
+  app.get("/", async (req, res) => {
     res.send({ info: "Projeto 02 - Módulo 03" });
   });
 
@@ -150,6 +151,11 @@ require("dotenv").config();
         .send({ error: "Ocorreu um erro ao deletar o personagem." });
     }
     res.status(204);
+  });
+
+  // middleware para verificar endpoints
+  app.all("*", function (req, res) {
+    res.status(404).send({ error: "Endpoint was not found" });
   });
 
   // tratamento de erros gerais (middleware) na mão
