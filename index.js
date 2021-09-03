@@ -71,7 +71,11 @@ require("dotenv").config();
   // GET /Characters{:id} respondendo a req com o personagem pelo id
   app.get("/characters/:id", async (req, res) => {
     const id = req.params.id;
-    res.send(await getCharactersById(id));
+    const character = await getCharactersById(id);
+    if (!character) {
+      res.status(404).send({ erro: "Personagem não existe." });
+    }
+    res.send({ character });
   });
 
   // POST /characters respondendo todos os personagens
@@ -127,11 +131,9 @@ require("dotenv").config();
       return;
     }
 
+    const deleteCharacter = await deleteCharacters(id);
 
-    const deleteCharacter = await deleteCharacters(id)
-
-
-    console.log(deleteCharacter)
+    console.log(deleteCharacter);
     res.send(deleteCharacters(id));
   });
 
