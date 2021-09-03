@@ -152,6 +152,16 @@ require("dotenv").config();
     res.status(204);
   });
 
+  // tratamento de erros gerais (middleware) na mão
+  app.use((error, req, res, next) => {
+    res.status(error.status || 500).send({
+      error: {
+        status: error.status || 500,
+        message: error || "Internal Server error.",
+      },
+    });
+  });
+
   app.listen(port, () => {
     console.log(`Servidor rodando em: http://localhost:${port}`);
   });
