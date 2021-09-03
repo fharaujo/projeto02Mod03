@@ -74,6 +74,7 @@ require("dotenv").config();
     const character = await getCharactersById(id);
     if (!character) {
       res.status(404).send({ erro: "Personagem não existe." });
+      return;
     }
     res.send({ character });
   });
