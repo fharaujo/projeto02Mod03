@@ -153,17 +153,17 @@ require("express-async-errors");
     res.status(204);
   });
 
-  // middleware para verificar endpoints
+  // tratamento de erro middleware para verificar endpoints
   app.all("*", function (req, res) {
     res.status(404).send({ error: "Endpoint was not found" });
   });
 
-  // tratamento de erros gerais (middleware) na mão
+  // tratamento de erros gerais middleware na mão
   app.use((error, req, res, next) => {
     res.status(error.status || 500).send({
       error: {
         status: error.status || 500,
-        message: error || "Internal Server error.",
+        message: error.message || "Internal Server error.",
       },
     });
   });
