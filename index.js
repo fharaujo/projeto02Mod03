@@ -73,10 +73,10 @@ require("dotenv").config();
     const id = req.params.id;
     const character = await getCharactersById(id);
     if (!character) {
-      res.status(404).send({ erro: "Personagem não existe." });
+      res.status(404).send({ error: "Personagem não existe." });
       return;
     }
-    res.send({ character });
+    res.send(character);
   });
 
   // POST /characters respondendo todos os personagens
@@ -84,21 +84,20 @@ require("dotenv").config();
     const character = req.body;
 
     if (!character || !character.nome || !character.imagemUrl) {
-      res
-        .status(400)
-        .send({
-          error:
-            "Personagem inválido. Certifique-se que preencheu os campos solicitados.",
-        });
+      res.status(400).send({
+        error:
+          "Personagem inválido. Certifique-se que preencheu os campos solicitados.",
+      });
       return;
     }
 
     const result = await postCharacters(character);
+    
     if (result.acknowledged == false) {
       res.status(500).send({ error: "Personagem não existe." });
       return;
     }
-    res.status(201).send(result);
+    res.status(201).send(character);
   });
 
   // PUT /characters/{:id} atualizando personagem pelo id
@@ -107,7 +106,7 @@ require("dotenv").config();
     const character = req.body;
 
     if (!character || !character.nome || !character.imagemUrl) {
-      res.status(404).send({ error: "Personagem está falando elementos." });
+      res.status(400).send({ error: "Personagem está falando elementos." });
       return;
     }
 
@@ -119,13 +118,14 @@ require("dotenv").config();
       return;
     }
     const updateCharacter = await putCharacters(id, character);
+
     console.log(updateCharacter);
-    if (updateCharacter.modifiedCount !== 1) {
-      res.send({ error: "Erro na atualização." });
+    if (updateCharacter.acknowledged == "undefined") {
+      res.status(500).send({ error: "Ocorreu um erro ao atualizar o personagem." });
       return;
     }
-
-    res.send(await getCharactersById(id));
+    const newCharacters = await getCharactersById(id)
+    res.send(newCharacters);
   });
 
   // DELETE /characters/{:id} deletando personagem pelo id
@@ -142,8 +142,10 @@ require("dotenv").config();
 
     const deleteCharacter = await deleteCharacters(id);
 
-    console.log(deleteCharacter);
-    res.send(deleteCharacters(id));
+    if(deleteCharacter.deletedCount !== 1){
+      res.status(500).send({error: "Ocorreu um erro ao deletar o personagem."})
+    }
+    res.status(204);
   });
 
   app.listen(port, () => {
