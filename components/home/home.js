@@ -3,11 +3,11 @@ const router = express.Router();
 
 // middleware que especifica que esta rota home será utilizada
 router.use((req, res, next) => {
-        console.log("Tempo ", Date.now());
-    });
+  next();
+});
 
 // GET "/" rota inicial home
-app.get("/", async (req, res) => {
+router.get("/", async (req, res) => {
   res.send({ info: "Projeto 02 - Módulo 03" });
 });
 

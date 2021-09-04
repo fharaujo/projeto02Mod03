@@ -4,7 +4,7 @@ const ObjectId = mongodb.ObjectId;
 require("dotenv").config();
 require("express-async-errors");
 
-// importa de endpoints
+// importação dos endpoints
 const home = require("./components/home/home");
 
 (async () => {
@@ -170,6 +170,6 @@ const home = require("./components/home/home");
   });
 
   app.listen(port, () => {
-    console.log(`Servidor rodando em: http://localhost:${port}`);
+    console.log(`Servidor rodando em: http://localhost:${port}/home`);
   });
 })();
