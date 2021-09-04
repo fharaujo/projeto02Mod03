@@ -17,7 +17,7 @@ const home = require("./components/home/home");
   const dbChar = process.env.DB_CHAR;
 
   // porta do servidor
-  const port = 3000;
+  const port = process.env.PORT || 3000;
   // string de conexão com MongoDB Atlas (Cloud)
   const connectionString = `mongodb+srv://${dbUser}:${dbPassword}@cluster0.${dbChar}.mongodb.net/${dbName}?retryWrites=true&w=majority`;
 
