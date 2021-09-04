@@ -59,7 +59,7 @@ require("express-async-errors");
     next();
   });
 
-  // GET "/" rota inicial
+  // GET "/" rota inicial home
   app.get("/", async (req, res) => {
     res.send({ info: "Projeto 02 - Módulo 03" });
   });
