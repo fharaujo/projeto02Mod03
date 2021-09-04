@@ -4,12 +4,15 @@ const ObjectId = mongodb.ObjectId;
 require("dotenv").config();
 require("express-async-errors");
 
+// importa de endpoints
+const home = require("./components/home/home");
+
 (async () => {
   const app = express();
   app.use(express.json());
   // variáveis de ambientes do banco
   const dbName = process.env.DB_NAME;
-  const dbPassword = process.env.DB_PASSWORD;
+  const dbPassword = process.env.DB_PASSOWRD;
   const dbUser = process.env.DB_USER;
   const dbChar = process.env.DB_CHAR;
 
@@ -59,10 +62,8 @@ require("express-async-errors");
     next();
   });
 
-  // GET "/" rota inicial home
-  app.get("/", async (req, res) => {
-    res.send({ info: "Projeto 02 - Módulo 03" });
-  });
+  // Rotas utilizadas
+  app.use("/home", home);
 
   // GET /characters respondendo a req todos os personagens válidas
   app.get("/characters", async (req, res) => {
