@@ -9,7 +9,7 @@ require("express-async-errors");
   app.use(express.json());
   // variáveis de ambientes do banco
   const dbName = process.env.DB_NAME;
-  const dbPassword = process.env.DB_PASSOWRD;
+  const dbPassword = process.env.DB_PASSWORD;
   const dbUser = process.env.DB_USER;
   const dbChar = process.env.DB_CHAR;
 
