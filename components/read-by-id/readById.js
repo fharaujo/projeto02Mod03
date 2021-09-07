@@ -16,7 +16,7 @@ router.use((req, res, next) => {
 
 // GET /:id rota para o requisão por id
 router.get("/:id", async (req, res) => {
-  await db_connect(); 
+  await db_connect();
   const id = req.params.id;
   const character = await characters.findOne({ _id: ObjectId(id) });
   if (!character) {

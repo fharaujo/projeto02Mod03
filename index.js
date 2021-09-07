@@ -40,12 +40,13 @@ const exclude = require("./components/delete/delete");
   app.use("/characters/create", create); // criar o personagem
   app.use("/characters/update", update); // atualizar personagem
   app.use("/characters/delete", exclude);
+
   // tratamento de erro middleware para verificar endpoints
   app.all("*", function (req, res) {
     res.status(404).send({ error: "Endpoint was not found" });
   });
 
-  // tratamento de erros gerais middleware na mão
+  // tratamento de erros gerais middleware
   app.use((error, req, res, next) => {
     res.status(error.status || 500).send({
       error: {
