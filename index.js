@@ -1,42 +1,23 @@
 const express = require("express");
 const mongodb = require("mongodb");
 const ObjectId = mongodb.ObjectId;
+var cors = require("cors");
 require("dotenv").config();
 require("express-async-errors");
 
 // importação dos endpoints
 const home = require("./components/home/home");
+const readAll = require("./components/read-all/readAll");
+const readById = require("./components/read-by-id/readById");
+const create = require("./components/create/create");
+const update = require("./components/update/update");
+const exclude = require("./components/delete/delete");
 
 (async () => {
   const app = express();
   app.use(express.json());
-  // variáveis de ambientes do banco
-  const dbName = process.env.DB_NAME;
-  const dbPassword = process.env.DB_PASSOWRD;
-  const dbUser = process.env.DB_USER;
-  const dbChar = process.env.DB_CHAR;
-
   // porta do servidor
   const port = process.env.PORT || 3000;
-  // string de conexão com MongoDB Atlas (Cloud)
-  const connectionString = `mongodb+srv://${dbUser}:${dbPassword}@cluster0.${dbChar}.mongodb.net/${dbName}?retryWrites=true&w=majority`;
-
-  // fazendo a conexão direta com o banco
-  const options = {
-    useUnifiedTopology: true,
-  };
-  // cria um cliente
-  const cliente = await mongodb.MongoClient.connect(connectionString, options);
-  // pegando cliente db
-  const db = cliente.db("db_project_blue");
-  // buscando o objeto especifico do banco
-  const characters = db.collection("characters");
-
-  // pegando personagem é válido e colocando em uma array de objeto/json
-  const getCharacterValid = () => characters.find({}).toArray();
-
-  // buscando personagem pelo id
-  const getCharactersById = (id) => characters.findOne({ _id: ObjectId(id) });
 
   // criando/inserindo personagem
   const postCharacters = (character) => characters.insertOne({ character });
@@ -48,112 +29,17 @@ const home = require("./components/home/home");
   // excluindo personagem
   const deleteCharacters = (id) => characters.deleteOne({ _id: ObjectId(id) });
 
-  //CORS
-  app.all("/*", (req, res, next) => {
-    res.header("Access-Control-Allow-Origin", "*");
-
-    res.header("Access-Control-Allow-Methods", "*");
-
-    res.header(
-      "Access-Control-Allow-Headers",
-      "Access-Control-Allow-Headers, Origin, Accept, X-Requested-With, Content-Type, Access-Control-Request-Method, Access-Control-Request-Headers, Authorization"
-    );
-
-    next();
-  });
+  // nova liberação do CORS em todas as requisições
+  app.use(cors());
+  app.options("*", cors()); // ativar todos os pre-flights erros
 
   // Rotas utilizadas
-  app.use("/home", home);
-
-  // GET /characters respondendo a req todos os personagens válidas
-  app.get("/characters", async (req, res) => {
-    res.send(await getCharacterValid());
-  });
-
-  // GET /Characters{:id} respondendo a req com o personagem pelo id
-  app.get("/characters/:id", async (req, res) => {
-    const id = req.params.id;
-    const character = await getCharactersById(id);
-    if (!character) {
-      res.status(404).send({ error: "Personagem não existe." });
-      return;
-    }
-    res.send(character);
-  });
-
-  // POST /characters respondendo todos os personagens
-  app.post("/characters", async (req, res) => {
-    const character = req.body;
-
-    if (!character || !character.nome || !character.imagemUrl) {
-      res.status(400).send({
-        error:
-          "Personagem inválido. Certifique-se que preencheu os campos solicitados.",
-      });
-      return;
-    }
-
-    const result = await postCharacters(character);
-
-    if (result.acknowledged == false) {
-      res.status(500).send({ error: "Personagem não existe." });
-      return;
-    }
-    res.status(201).send(character);
-  });
-
-  // PUT /characters/{:id} atualizando personagem pelo id
-  app.put("/characters/:id", async (req, res) => {
-    const id = req.params.id;
-    const character = req.body;
-
-    if (!character || !character.nome || !character.imagemUrl) {
-      res.status(400).send({ error: "Personagem está falando elementos." });
-      return;
-    }
-
-    const quantityCharacters = await characters.countDocuments({
-      _id: ObjectId(id),
-    });
-    if (quantityCharacters !== 1) {
-      res.status(404).send({ erro: "Personagem não encontrado." });
-      return;
-    }
-    const updateCharacter = await putCharacters(id, character);
-
-    console.log(updateCharacter);
-    if (updateCharacter.acknowledged == "undefined") {
-      res
-        .status(500)
-        .send({ error: "Ocorreu um erro ao atualizar o personagem." });
-      return;
-    }
-    const newCharacters = await getCharactersById(id);
-    res.send(newCharacters);
-  });
-
-  // DELETE /characters/{:id} deletando personagem pelo id
-  app.delete("/characters/:id", async (req, res) => {
-    const id = req.params.id;
-
-    const quantityCharacters = await characters.countDocuments({
-      _id: ObjectId(id),
-    });
-    if (quantityCharacters !== 1) {
-      res.status(404).send({ erro: "Personagem não encontrado." });
-      return;
-    }
-
-    const deleteCharacter = await deleteCharacters(id);
-
-    if (deleteCharacter.deletedCount !== 1) {
-      res
-        .status(500)
-        .send({ error: "Ocorreu um erro ao deletar o personagem." });
-    }
-    res.status(204);
-  });
-
+  app.use("/home", home); // principal
+  app.use("/characters/read-all", readAll); // exibe todos os personagens
+  app.use("/characters/readbyid", readById); // exibe personagem por ID
+  app.use("/characters/create", create); // criar o personagem
+  app.use("/characters/update", update); // atualizar personagem
+  app.use("/characters/delete", exclude);
   // tratamento de erro middleware para verificar endpoints
   app.all("*", function (req, res) {
     res.status(404).send({ error: "Endpoint was not found" });
